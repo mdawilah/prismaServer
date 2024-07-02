@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./belajar.db"
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String?
+  email    String    @unique
+  password String
+  products Product[]
+  orders   Order[]
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  price       Int
+  stock       Int
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id])
+  images      Image[]
+  orders      Order[]
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  url       String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  quantity   Int
+  totalPrice Int
+  orderDate  DateTime
+  status     String
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
